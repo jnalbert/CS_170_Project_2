@@ -1,4 +1,5 @@
 from search_algos import forward_selection
+from search_algos import backward_elimination
 
 def main():
   
@@ -18,9 +19,6 @@ def main():
     print(forward_selection(features))
   elif algo_choice == 2:
     print(backward_elimination(features))
-  else:
-    print("Invalid choice")
-    return 0
 
 
 main()
