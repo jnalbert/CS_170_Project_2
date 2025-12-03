@@ -1,72 +1,94 @@
-import time
+import numpy as np
 from search_algos import forward_selection
 from search_algos import backward_elimination
-from validator import Validator
-from nn_classifier import NearestNeighborClassifier
-# def main():
-  
-#   print("Welcome to Justin Albert, Vinden Drummond, and Sarbesh Sankar's Feature Selection Algorithm.")
 
-#   num_features = int(input("Please enter total number of features: "))
+# Group: Justin Albert - jalbe020 - Sec 021, Vinden Drummond - vdrum002 - Sec 021, Sarbesh Sankar - ssank019 - Sec 021
+# - DatasetID: 123 (I'm not sure what this is for)
+# - Small Dataset Results:
+# -     Forward: Feature Subset: <your best feature subset>, Acc: <your accuracy on that feature subset>
+# -     Backward: Feature Subset: <your best feature subset>, Acc:<your acc. on that feature subset>
+# - Large Dataset Results:
+# -     Forward: Feature Subset: <your best feature subset>, Acc: <your accuracy on that feature subset>
+# -     Backward: Feature Subset: <your best feature subset>, Acc: <your acc. on that feature subset>
+# - Titanic Dataset Results:
+# -     Forward: Feature Subset: <your best feature subset>, Acc: <your accuracy on that feature subset>
+# -     Backward: Feature Subset: <your best feature subset>, Acc: <your acc. on that feature subset>
 
-#   print("Type the number of the algorithm you want to run.")
-#   print("\t 1)Forward Selection")
-#   print("\t 2)Backward Elimination")
 
-#   algo_choice = int(input())
+# adapted from https://www.geeksforgeeks.org/python/how-to-normalize-an-numpy-array-so-the-values-range-exactly-between-0-and-1/
+def normalize_data(dataset):
+    print("Please wait while I normalize the data... ")
 
-#   features = list(range(num_features))
+    class_labels = []
+    # 2 D array of features
+    dataset_features = []
+    for item in dataset:
+        class_labels.append(item[0])
+        dataset_features.append(item[1])
 
-#   if algo_choice == 1:
-#     print(forward_selection(features))
-#   elif algo_choice == 2:
-#     print(backward_elimination(features))
+    dataset_features = np.array(dataset_features)
 
-def run_classifier_and_validator(dataset, feature_subset):
-  classifier = NearestNeighborClassifier()
-  validator = Validator()
-  accuracy = validator.validate(feature_subset, classifier, dataset)
-  return accuracy
+    feature_mins = np.min(dataset_features)
+    feature_maxs = np.max(dataset_features)
+
+    # normalize the features
+    normalized_features = (dataset_features - feature_mins) / (feature_maxs - feature_mins)
+
+    # convert datae back to the data set format of (class_label, feature_vector)
+    normalized_dataset = []
+    for i in range(len(dataset)):
+        normalized_dataset.append((class_labels[i], normalized_features[i].tolist()))
+
+    return normalized_dataset
+
 
 # adapted from https://stackoverflow.com/questions/29307532/python-how-can-read-as-float-numbers-a-series-of-strings-from-a-text-file
 def load_dataset(filename):
-  print("Loading dataset from " + filename + "...")
-  start_time = time.time()
-  with open(filename, 'r') as file:
-    lines = file.readlines()
-    dataset = []
-    for line in lines:
-      line = line.strip()
-      if line:
-        features = []
-        for x in line.split():
-            features.append(float(x))
-        dataset.append((features[0], features[1:]))
-  print("Time taken: " + str(round((time.time() - start_time) * 1000, 2)) + " ms\n")
-  return dataset
+    with open(filename, 'r') as file:
+        lines = file.readlines()
+        dataset = []
+        for line in lines:
+            line = line.strip()
+            if line:
+                features = []
+                for x in line.split():
+                    features.append(float(x))
+                dataset.append((features[0], features[1:]))
+    return dataset
+
 
 def main():
-  print("Welcome to Justin Albert, Vinden Drummond, and Sarbesh Sankar's NN classifier and validator.")
-  
-  print("Type the number of the dataset you want to run.")
-  print("\t 1) Small Test Dataset")
-  print("\t 2) Large Test Dataset")
+    print(
+        "Welcome to Justin Albert, Vinden Drummond, and Sarbesh Sankar's Feature Selection Algorithm.\n"
+    )
 
-  dataset_choice = int(input())
-  dataset = None
-  # a 1 indexed array of the features to use
-  feature_subset = []
-  if dataset_choice == 1:
-    dataset = load_dataset("small-test-dataset.txt")
-    feature_subset = [3, 5, 7]
-  elif dataset_choice == 2:
-    dataset = load_dataset("large-test-dataset.txt")
-    feature_subset = [1, 15, 27]
-  
-  print("Running NN classifier and validator on dataset...\n")
-  # print(dataset)
-  accuracy = run_classifier_and_validator(dataset, feature_subset)
-  
+    filename = input("Type in the name of the file to test: ")
+
+    dataset = load_dataset(filename)
+
+    num_features = len(dataset[0][1])
+    num_instances = len(dataset)
+
+    print(
+        f"This dataset has {num_features} features (not including the class attribute), with {num_instances} instances.\n"
+    )
+
+    dataset = normalize_data(dataset)
+
+    print("\nType the number of the algorithm you want to run.\n")
+    print("\t1) Forward Selection")
+    print("\t2) Backward Elimination")
+    print()
+
+    algo_choice = int(input())
+
+    # make a 1 indexed list of features
+    features = list(range(1, num_features + 1))
+
+    if algo_choice == 1:
+        forward_selection(features, dataset)
+    elif algo_choice == 2:
+        backward_elimination(features, dataset)
 
 
 main()

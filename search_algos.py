@@ -1,8 +1,14 @@
-import random
+from nn_classifier import NearestNeighborClassifier
+from validator import Validator
+
+classifier = NearestNeighborClassifier()
+validator = Validator()
+
 
 # features is a list of integers
-def evaluation_function(features):
-    return round(random.random(), 3)
+def evaluation_function(current_features, dataset):
+    accuracy = validator.validate(current_features, classifier, dataset)
+    return accuracy
 
 
 def format_feature_set(features):
@@ -13,10 +19,11 @@ def format_feature_set(features):
 
 
 # features is a list of integers
-def forward_selection(features):
-    no_features_accuracy = evaluation_function([])
+# dataset is a list of tuples where each tuple is (class_label, feature_vector)
+def forward_selection(features, dataset):
+    no_features_accuracy = evaluation_function([], dataset)
     print(
-        'Using no features and "random" evaluation, I get an accuracy of '
+        'Running nearest neighbor with no features (default rate), using "leaving-one-out" evaluation, I get an accuracy of '
         + str(round(no_features_accuracy * 100, 1))
         + "%"
     )
@@ -35,8 +42,8 @@ def forward_selection(features):
         best_set = None
 
         for feature in features_left:
-            new_feature_set = [feature] + curr_best_features 
-            accuracy = evaluation_function(new_feature_set)
+            new_feature_set = [feature] + curr_best_features
+            accuracy = evaluation_function(new_feature_set, dataset)
 
             feature_str = format_feature_set(new_feature_set)
             print(
@@ -84,11 +91,14 @@ def forward_selection(features):
 
     return curr_best_features
 
-def backward_elimination(features):
+
+# features is a list of integers
+# dataset is a list of tuples where each tuple is (class_label, feature_vector)
+def backward_elimination(features, dataset):
     # start with all features
-    all_features_accuracy = evaluation_function(features)
+    all_features_accuracy = evaluation_function(features, dataset)
     print(
-        'Using all features and "random" evaluation, I get an accuracy of '
+        'Running nearest neighbor with all features, using "leaving-one-out" evaluation, I get an accuracy of '
         + str(round(all_features_accuracy * 100, 1))
         + "%"
     )
@@ -108,7 +118,7 @@ def backward_elimination(features):
             new_feature_set = curr_best_features.copy()
             new_feature_set.remove(feature)
 
-            accuracy = evaluation_function(new_feature_set)
+            accuracy = evaluation_function(new_feature_set, dataset)
 
             feature_str = format_feature_set(new_feature_set)
             print(
@@ -136,8 +146,9 @@ def backward_elimination(features):
 
         feature_str = format_feature_set(curr_best_features)
         print(
-            "Removing " + str(best_feature_to_remove) +
-            ". Feature set "
+            "Removing "
+            + str(best_feature_to_remove)
+            + ". Feature set "
             + feature_str
             + " was best, accuracy is "
             + str(round(curr_best_accuracy * 100, 1))
