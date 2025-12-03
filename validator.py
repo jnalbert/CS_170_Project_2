@@ -19,7 +19,7 @@ class Validator:
             for instance in training_data:
                 class_label = instance[0]
                 feature_vector = []
-                for feat_idx in feature_subset:  # feature_subset is 1-indexed
+                for feat_idx in feature_subset: 
                     feature_vector.append(instance[feat_idx])
                 training_tuples.append((feature_vector, class_label))
             
