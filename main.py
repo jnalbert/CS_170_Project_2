@@ -5,14 +5,14 @@ from search_algos import backward_elimination
 # Group: Justin Albert - jalbe020 - Sec 021, Vinden Drummond - vdrum002 - Sec 021, Sarbesh Sankar - ssank019 - Sec 021
 # - DatasetID: 123 (I'm not sure what this is for)
 # - Small Dataset Results:
-# -     Forward: Feature Subset: <your best feature subset>, Acc: <your accuracy on that feature subset>
-# -     Backward: Feature Subset: <your best feature subset>, Acc:<your acc. on that feature subset>
+# -     Forward: Feature Subset: {3,5}, Acc: 92%
+# -     Backward: Feature Subset: {2,4,5,7,1}, Acc: 83%
 # - Large Dataset Results:
-# -     Forward: Feature Subset: <your best feature subset>, Acc: <your accuracy on that feature subset>
-# -     Backward: Feature Subset: <your best feature subset>, Acc: <your acc. on that feature subset>
+# -     Forward: Feature Subset: {1,27}, Acc: 95.5%
+# -     Backward: Feature Subset: {1,2,3,5,9,10,11,12,13,15,17,18,19,20,22,23,24,25,26,27,28,29,30,31,34,35,36,37,38,40}, Acc: 74.5%
 # - Titanic Dataset Results:
-# -     Forward: Feature Subset: <your best feature subset>, Acc: <your accuracy on that feature subset>
-# -     Backward: Feature Subset: <your best feature subset>, Acc: <your acc. on that feature subset>
+# -     Forward: Feature Subset: {2}, Acc: 78%
+# -     Backward: Feature Subset: {2}, Acc: 78%
 
 
 # adapted from https://www.geeksforgeeks.org/python/how-to-normalize-an-numpy-array-so-the-values-range-exactly-between-0-and-1/
